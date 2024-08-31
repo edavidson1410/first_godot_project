@@ -6,9 +6,9 @@ public partial class player : CharacterBody2D
 	[Export]
 	public float speed = 200.0f;
 	[Export]
-	public float jumpVelocity = -200.0f;
+	public float jumpVelocity = -300.0f;
 	[Export]
-	public float doubleJumpVelocity = -100.0f;
+	public float doubleJumpVelocity = -200.0f;
 
 	
 	AnimatedSprite2D playerAnimations = null;
@@ -17,6 +17,9 @@ public partial class player : CharacterBody2D
 	public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
 	private bool hasDoubleJump = false;
 	private bool animation_locked = false;
+	private bool was_in_air = false;
+	Vector2 velocity;
+	Vector2 direction = Vector2.Zero;
 
 	public override void _Ready()
 	{
@@ -25,24 +28,27 @@ public partial class player : CharacterBody2D
 
 	public override void _PhysicsProcess(double delta)
 	{
-		Vector2 velocity = Velocity;
 
 		// Add the gravity.
-		if (!IsOnFloor())
+		if (!IsOnFloor()) {
 			velocity.Y += gravity * (float)delta;
-		else
+			was_in_air = true;
+		}
+		else {
 			hasDoubleJump = false;
+			if(was_in_air) {
+				Land();
+			}
+		}
 
 		// Handle Jump.
 		if (Input.IsActionJustPressed("jump")){
 			if(IsOnFloor()) {
-				velocity.Y = jumpVelocity;
+				Jump();
 			} 
 			else if (hasDoubleJump != true) {
-				velocity.Y = doubleJumpVelocity;
-				hasDoubleJump = true;
+				Double_jump();
 			}
-
 		}
 
 		// Get the input direction and handle the movement/deceleration.
@@ -57,14 +63,47 @@ public partial class player : CharacterBody2D
 		{
 			velocity.X = Mathf.MoveToward(Velocity.X, 0, speed);
 			playerAnimations.Play("idle");
-
 		}
 
 		Velocity = velocity;
 		MoveAndSlide();
-		// flips animation
+		// Update_animation();
+		Flip_animation();
+	}
+
+	private void Update_animation() {
+		if (animation_locked == false) {
+			playerAnimations.Play("jump_loop");
+		} else {
+			if (direction.X != 0) playerAnimations.Play("run");
+			else playerAnimations.Play("idle");
+		}
+	}
+
+	private void Flip_animation() {
 		bool isLeft = velocity.X < 0;
 		playerAnimations.FlipH = isLeft;
 	}
- 
+
+	private void Jump(){
+		velocity.Y = jumpVelocity;
+		playerAnimations.Play("jump_start");
+		animation_locked = true;
+	}
+
+	private void Double_jump(){
+		velocity.Y = doubleJumpVelocity;
+		playerAnimations.Play("jump_double");
+		animation_locked = true;
+		hasDoubleJump = true;
+	}
+
+	private void Land() {
+		playerAnimations.Play("jump_end");
+		animation_locked = true;
+	}
+
+	private void _On_animated_sprite_2d_animation_finished() {
+
+	}
 }
