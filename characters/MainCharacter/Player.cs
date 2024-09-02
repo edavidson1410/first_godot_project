@@ -9,6 +9,7 @@ public partial class Player : CharacterBody2D
 	private float gravity = 1000;
 	[Export]
 	private int speed = 400;
+	private bool attacking = false;
 	private bool jumping = false;
 	[Export]
 	private int jumpHeight = 500;
@@ -34,32 +35,45 @@ public partial class Player : CharacterBody2D
 		if(IsOnFloor() != true) {
 			velocity.Y += gravity * (float)delta;
 		}
-		// Jump reset
+		// jump reset
 		if (jumping == true && IsOnFloor() == true)
         {
             jumping = false;
         }
-
-		Vector2 direction = Input.GetVector("left", "right", "up", "down");
-		if (direction != Vector2.Zero)
-		{
-			velocity.X = direction.X * speed;
-			if(jumping == false)	animatedSprite2D.Play("run");
-		}
-		else
-		{
-			velocity.X = Mathf.MoveToward(Velocity.X, 0, speed);
-			animatedSprite2D.Play("idle");
-		}
-
 		// Jump logic
 		if(Input.IsActionJustPressed("jump")) {
 			Jump();
 		}
+		if(attacking == true && !Input.IsActionJustPressed("attack")) {
+			attacking = false;
+		}
+		// Attack
+		if(Input.IsActionPressed("attack")){
+			Attack();
+		}
+
+		// running/idle
+		Vector2 direction = Input.GetVector("left", "right", "up", "down");
+		if (direction != Vector2.Zero)
+		{
+			velocity.X = direction.X * speed;
+			if(jumping == false && attacking == false)	animatedSprite2D.Play("run");
+		}
+		else
+		{
+			velocity.X = Mathf.MoveToward(Velocity.X, 0, speed);
+			if(jumping == false && attacking == false) animatedSprite2D.Play("idle");
+		}
+
+
 
 		Velocity = velocity;
 		MoveAndSlide();
 		Flip_animation();
+	}
+
+	private void Input_manager() {
+
 	}
 
 	private void Flip_animation() {
@@ -71,5 +85,10 @@ public partial class Player : CharacterBody2D
 		jumping = true;
 		velocity.Y = -jumpHeight;
 		animatedSprite2D.Play("jump_loop");
+	}
+
+	private void Attack() {
+		attacking = true;
+		animatedSprite2D.Play("attack");
 	}
 }
