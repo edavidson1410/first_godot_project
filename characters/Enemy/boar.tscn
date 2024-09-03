@@ -1,6 +1,7 @@
-[gd_scene load_steps=8 format=3 uid="uid://c2lef6w4b8kgj"]
+[gd_scene load_steps=9 format=3 uid="uid://c2lef6w4b8kgj"]
 
 [ext_resource type="Texture2D" uid="uid://ct0floxmm7h0e" path="res://assets/Legacy-Fantasy - High Forest 2.3/Mob/Boar/Idle/Idle-Sheet-export-Back.png" id="1_tpuxm"]
+[ext_resource type="Script" path="res://characters/Enemy/Boar.cs" id="1_uf2dy"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_6r8cl"]
 atlas = ExtResource("1_tpuxm")
@@ -44,7 +45,12 @@ height = 34.0
 
 [node name="Mob" type="RigidBody2D"]
 collision_mask = 0
+script = ExtResource("1_uf2dy")
 metadata/_edit_group_ = true
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]
+position = Vector2(2.38419e-07, 4)
+scale = Vector2(1.6, 1.2)
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
 position = Vector2(0, -1)
@@ -55,5 +61,3 @@ animation = &"idle"
 position = Vector2(-1, 5)
 rotation = -1.5708
 shape = SubResource("CapsuleShape2D_wivw0")
-
-[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="."]

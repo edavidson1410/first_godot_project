@@ -3,7 +3,8 @@ using System;
 
 public partial class Player : CharacterBody2D
 {
-
+	[Signal]
+	public delegate void HitEventHandler();
 	// public float gravity = ProjectSettings.GetSetting("physics/2d/default_gravity").AsSingle();
 	[Export]
 	private float gravity = 1000;
@@ -17,6 +18,7 @@ public partial class Player : CharacterBody2D
 
 	public Vector2 ScreenSize;
 	AnimatedSprite2D animatedSprite2D = null;
+	CollisionShape2D collisionShape2D = null;
 	public Vector2 velocity = Vector2.Zero; // The player's movement vector.
 
 
@@ -24,7 +26,9 @@ public partial class Player : CharacterBody2D
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
 	{
+		// Get Nodes
 		animatedSprite2D = GetNode<AnimatedSprite2D>("AnimatedSprite2D");
+		collisionShape2D = GetNode<CollisionShape2D>("CollisionShape2D");
 	}
 
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
@@ -90,5 +94,20 @@ public partial class Player : CharacterBody2D
 	private void Attack() {
 		attacking = true;
 		animatedSprite2D.Play("attack");
+	}
+
+	private void OnBodyEntered(Node2D body)
+	{
+		Hide(); // Player disappears after being hit.
+		EmitSignal(SignalName.Hit);
+		// Must be deferred as we can't change physics properties on a physics callback.
+		collisionShape2D.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
+	}
+
+	public void Start(Vector2 position)
+	{
+		Position = position;
+		Show();
+		GetNode<CollisionShape2D>("CollisionShape2D").Disabled = false;
 	}
 }
