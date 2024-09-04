@@ -28,7 +28,7 @@ public partial class Main : Node
 		_score = 0;
 
 		var player = GetNode<Player>("Player");
-		var startPosition = GetNode<Marker2D>("StatPosition");
+		var startPosition = GetNode<Marker2D>("StartPosition");
 		player.Start(startPosition.Position);
 
 		GetNode<Timer>("StartTimer").Start();
