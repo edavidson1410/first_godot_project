@@ -1,5 +1,7 @@
 using Godot;
 using System;
+using System.Linq.Expressions;
+using System.Xml.Resolvers;
 
 public partial class Main : Node
 {
@@ -7,6 +9,9 @@ public partial class Main : Node
 	[Export]
 	public PackedScene MobScene {get; set;}
 	private int _score;
+
+
+
 
 	// Called when the node enters the scene tree for the first time.
 	public override void _Ready()
@@ -17,6 +22,11 @@ public partial class Main : Node
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
+		// // timer test
+		// var mob_timer = GetNode<Timer>("MobTimer");
+		// var label = GetNode<Label>("Label");
+		// label.Text = mob_timer.TimeLeft.ToString();
+
 	}
 
 	public void GameOver() {
@@ -31,19 +41,25 @@ public partial class Main : Node
 		var startPosition = GetNode<Marker2D>("StartPosition");
 		player.Start(startPosition.Position);
 
-		GetNode<Timer>("StartTimer").Start();
+		GetNode<Timer>("MobTimer").Start();
+		GetNode<Timer>("ScoreTimer").Start();
+
+		Boar mob = MobScene.Instantiate<Boar>();
+
+		// Choose a random location on Path2D.
+		var mobSpawnLocation = GetNode<PathFollow2D>("MobPath/MobSpawnLocation");
+		mobSpawnLocation.ProgressRatio = GD.Randf();
+
+		// Set the mob's position to a random location.
+		mob.Position = mobSpawnLocation.Position;
+
+		// Spawn the mob by adding it to the Main scene.
+		AddChild(mob);
 	}
 
 	private void OnScoreTimerTimeout()
 	{
 		_score++;
-	}
-
-	// We also specified this function name in PascalCase in the editor's connection window.
-	private void OnStartTimerTimeout()
-	{
-		GetNode<Timer>("MobTimer").Start();
-		GetNode<Timer>("ScoreTimer").Start();
 	}
 
 	private void OnMobTimerTimeout()
