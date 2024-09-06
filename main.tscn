@@ -518,7 +518,10 @@ tile_map_data = PackedByteArray("AAD//yQAAAAEAAMAAAD//yUAAAAEAAQAAAD//yYAAAAAAAI
 tile_set = SubResource("TileSet_es6l6")
 
 [node name="Player" parent="." instance=ExtResource("3_hhlx7")]
-position = Vector2(0, 560)
+position = Vector2(88, 551)
+gravity = 1000.0
+speed = 400
+jumpHeight = 500
 
 [node name="MobTimer" type="Timer" parent="."]
 wait_time = 0.5

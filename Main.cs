@@ -8,7 +8,7 @@ public partial class Main : Node
 	// allows us to choose the Mob scene we want to instance
 	[Export]
 	public PackedScene MobScene {get; set;}
-	private int _score;
+	public static int score {get; set;}
 
 
 
@@ -22,10 +22,9 @@ public partial class Main : Node
 	// Called every frame. 'delta' is the elapsed time since the previous frame.
 	public override void _Process(double delta)
 	{
-		// // timer test
-		// var mob_timer = GetNode<Timer>("MobTimer");
-		// var label = GetNode<Label>("Label");
-		// label.Text = mob_timer.TimeLeft.ToString();
+		// timer test
+		var label = GetNode<Label>("Label");
+		label.Text = score.ToString();
 
 	}
 
@@ -35,9 +34,9 @@ public partial class Main : Node
 	}
 
 	public void NewGame(){
-		_score = 0;
+		score = 0;
 
-		var player = GetNode<Player>("Player");
+		var player = GetNode<PlayerController>("Player");
 		var startPosition = GetNode<Marker2D>("StartPosition");
 		player.Start(startPosition.Position);
 
@@ -55,11 +54,6 @@ public partial class Main : Node
 
 		// Spawn the mob by adding it to the Main scene.
 		AddChild(mob);
-	}
-
-	private void OnScoreTimerTimeout()
-	{
-		_score++;
 	}
 
 	private void OnMobTimerTimeout()

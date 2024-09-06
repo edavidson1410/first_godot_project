@@ -1,7 +1,7 @@
 using Godot;
 using System;
 
-public partial class Player : CharacterBody2D
+public partial class PlayerController : CharacterBody2D
 {
 	[Signal]
 	public delegate void HitEventHandler();
@@ -96,13 +96,7 @@ public partial class Player : CharacterBody2D
 		animatedSprite2D.Play("attack");
 	}
 
-	private void OnBodyEntered(Node2D body)
-	{
-		Hide(); // Player disappears after being hit.
-		EmitSignal(SignalName.Hit);
-		// Must be deferred as we can't change physics properties on a physics callback.
-		collisionShape2D.SetDeferred(CollisionShape2D.PropertyName.Disabled, true);
-	}
+
 
 	public void Start(Vector2 position)
 	{

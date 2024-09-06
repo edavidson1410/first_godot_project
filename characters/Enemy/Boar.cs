@@ -30,9 +30,11 @@ public partial class Boar : RigidBody2D
 	}
 
 	// To emit values along with the signal, add them as extra arguments to the emit() function:
-	public void TakeDamage(int amount) {
-		int oldHealth = _health;
-		_health -= amount;
-		EmitSignal(SignalName.HealthChanged, oldHealth, _health);
+	public void OnBodyEntered(Node body) {
+		GD.Print("ouch");
+		if(body == PlayerController) {
+			Main.score += 1;
+		}
 	}
 }
+  
