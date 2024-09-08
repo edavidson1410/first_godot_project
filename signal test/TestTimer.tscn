@@ -1,0 +1,8 @@
+[gd_scene load_steps=2 format=3 uid="uid://dtdcarra6qpu0"]
+
+[ext_resource type="Script" path="res://signal test/TestTimer.cs" id="1_syjob"]
+
+[node name="TestTimer" type="Timer"]
+wait_time = 3.0
+autostart = true
+script = ExtResource("1_syjob")

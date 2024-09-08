@@ -32,7 +32,7 @@ public partial class Boar : RigidBody2D
 	// To emit values along with the signal, add them as extra arguments to the emit() function:
 	public void OnBodyEntered(Node body) {
 		GD.Print("ouch");
-		if(body == PlayerController) {
+		if(body is PlayerController) {
 			Main.score += 1;
 		}
 	}
